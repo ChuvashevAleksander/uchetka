@@ -20,7 +20,7 @@ class DetalList(View):
 		if num_page == '0': 
 			num_page = 1
 		company = Company.objects.filter(staff_users=request.user)
-		detals_company = UserDetal.objects.filter(company=company[0])
+		detals_company = UserDetal.objects.filter(company=company[0]).order_by('id')
 		query_result = Paginator(detals_company, 25)
 		if request.is_ajax():
 			data =  self.load_ajax_page(num_page)
@@ -34,6 +34,8 @@ class DetalList(View):
 		if request.is_ajax():
 			if request.POST['type'] == 'load_cats':
 				data = self.load_cats(request)
+			elif request.POST['type'] == 'add_to_upload':
+				data = self.add_to_upload(request)
 			return HttpResponse(json.dumps(data), content_type="application/json")
 		else:
 			query_result = self.filter_detals(request)
@@ -82,11 +84,21 @@ class DetalList(View):
 		r = requests.post('https://partsapi.ru/api.php', data=data)
 		return json.loads(r.content)
 
+	# Добавление деталей на выгрузку
+	def add_to_upload(self, request):
+		for elem in request.POST.getlist('add_ids[]'):
+			detal_obj = UserDetal.objects.get(id=elem)
+			detal_obj.uploaded = True
+			detal_obj.save()
+			UploadDetal.objects.create(detal=detal_obj)
+		return 'good'
+
 	# Рендеринг шаблона
 	def render_template(self, request, result, num_page=1):
 		query_result = result.page(num_page).object_list
 		all_detals = query_result.count()
 		context = {'all_detals' : [{'detal': query_result[i], 'count': i+1+((int(num_page)-1)*25) } for i in range(all_detals)],
+				   'upload_detals': UploadDetal.objects.all(),
 				   'page': result,
 				   'active_page': int(num_page),
 				   'forms': {'donor': DonorForm, 
@@ -97,28 +109,3 @@ class DetalList(View):
 				   'stockroom_count': Stock.objects.filter(company=(Company.objects.filter(staff_users=request.user)).count()),
 				   'group_user': request.user.groups.all()[0].name}
 		return render(request, 'detals_list/index.html', context=context)
-
-
-def small_filter(request):
-	if request.is_ajax():
-		print(request.POST)
-		if request.POST['filterValue'] == 'all':
-			query_detals = UserDetal.objects.all()
-		else:
-			query_detals = UserDetal.objects.filter(detal=AutoDetal.objects.get(value=request.POST['filterValue']))
-		
-		arr_detal = []
-		for elem in query_detals:
-			arr_detal.append({'detal': {'title': elem.detal.title, 'value': elem.detal.value},
-							  'stockroom': {'title': elem.stockroom.title, 'value': '1'},
-							  'donor_info': {'id_donor': elem.donor_info.pk,
-							  				 'mark': elem.donor_info.mark.title, 
-							  				 'model': elem.donor_info.model.title,
-							  				 'generation': elem.donor_info.generation.year},
-							  'price': elem.price,
-							  'description': elem.description, 
-							  'photo': elem.photo.url, 
-							  'account': request.user.username,
-							  })
-		data = json.dumps({'result_detal': arr_detal})
-		return HttpResponse(data, content_type="application/json")

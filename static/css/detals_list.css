@@ -50,6 +50,9 @@
 /***********************/
 .detals-table table { width: 100%; }
 .detals-table td, .detals-table th {padding-left: 10px; height: 50px; border-right: 1px solid #2b2b2b;}
+.global { width: 2%; text-align: center; filter: grayscale(100%);}
+.global.on { filter: none; color: #007eff; text-shadow: 0 0 5px #05ddff}
+td.global, th.global { padding-left: 0px;}
 .checkbox { width: 4%; text-align: center; padding-left: 0px;}
 .count-num { width: 4%; text-align: center; padding-left: 0px;}
 .detal-title { width: 12%; }
@@ -74,7 +77,8 @@
 }
 .head-table table { width: 99%; }
 .head-table th:hover { text-decoration: underline; cursor: pointer; }
-.head-table th i { margin-right: 5px;}
+.head-table th:hover { text-decoration: underline; cursor: pointer; }
+.head-table th.detal-price {border-right: none;}
 .head-table .checkbox { padding-top: 8px;}
 
 
@@ -88,8 +92,9 @@
     margin-top: 1%;
 }
 
-.body-table td { border-right: none; height: 30px;}
+.body-table td { border-right: none; height: 30px; font-style: normal;}
 .body-table tr:hover {background: #dceff4; cursor: pointer;}
+.body-table td.global { padding-left: 0px;}
 
 
 
@@ -137,7 +142,12 @@
 .button-block {
     display: inline-block;
     padding-top: 17px;
+    width: 65%;
 }
+
+.button-block button { font-size: 8pt; }
+
+#upload-button { float: right; width: auto;}
 
 
 /*****************/
@@ -247,7 +257,13 @@ li.not-active:hover, li.first:hover, li.last:hover, li.next-page:hover, li.prev-
 
 
 
-.list-ads .border-table { height: 100%; padding: 10px; overflow-y: scroll;}
+.list-ads .border-table { 
+    height: 100%; 
+    padding: 10px; 
+    overflow-y: scroll; 
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
 .list-ads table {width: 100%;}
 .list-ads tr.active {background: #dceff4;}
 .list-ads tr:hover {background: #dceff4; cursor: pointer;}

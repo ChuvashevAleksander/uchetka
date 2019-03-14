@@ -27,67 +27,6 @@ window.onscroll = function() {
     // }
 }
 
-
-
-// Боковая панель
-function move_panel(elem_td) {
-    var donor_panel = document.querySelector('.donor');
-    var showed = donor_panel.getAttribute('class');
-    var id_donor_new = elem_td.getElementsByTagName('a')[0].getAttribute('id')
-    var detalLine = elem_td.parentElement;
-    var detalLine_old = document.querySelector('.selectedDetal');
-    if (showed == 'donor in-detal-list show') {
-        if (id_donor_new == document.getElementById('idDonor').value)  {
-            if (detalLine == detalLine_old) {
-                donor_panel.classList.remove("show");
-                detalLine.classList.remove("selectedDetal");
-            } else {
-                detalLine_old.classList.remove("selectedDetal");
-                detalLine.classList.add("selectedDetal");
-            }
-        } else { 
-            detalLine_old.classList.remove("selectedDetal");
-            donor_panel.classList.remove("show");
-            setTimeout(function(){change_content(id_donor_new)}, 100);
-            setTimeout(function(){donor_panel.classList.add("show")}, 700);
-            detalLine.classList.add("selectedDetal");
-        } 
-    } else {
-        donor_panel.classList.add('show');
-        setTimeout(function(){change_content(id_donor_new)}, 100);
-        detalLine.classList.add("selectedDetal");
-    }
-
-    function change_content(id_donor_new){
-        document.querySelector('#idDonor').value = id_donor_new;
-        $.ajax({
-            url: '/lk/detals_list/load_donor/',
-            type: 'post',
-            data: {
-                'new_pk_donor': id_donor_new,
-                'csrfmiddlewaretoken': csrftoken
-            },
-            success: function (data) {
-                var donor_panel = document.querySelector('.donor');
-                donor_panel.querySelector('#donorVin').value = data.vin_number;
-                document.getElementById('all_marks').value = data.mark;
-                document.getElementById('all_models').value = data.model;
-                document.getElementById('all_generations').value = data.generation;
-                document.getElementById('all_years').value = data.year;
-                document.getElementById('all_kuzovs').value = data.kuzov;
-                donor_panel.querySelector('#donorProbeg').value = data.probeg;
-                document.getElementById('all_engine_type').value = data.engine_type;
-                document.getElementById('all_engine_size').value = data.engine_size;
-                document.getElementById('all_kpp').value = data.transmission;
-                document.getElementById('all_color').value = data.color;
-                document.getElementById('all_helm').value = data.helm;
-                document.getElementById('all_privod').value = data.privod;
-            }
-        });
-
-    }
-}
-
 // Отправка формы при изменении малого фильтра
 
 
@@ -128,85 +67,74 @@ $(".hide-button").click(function() {
     $('.upload-ads-table  > tbody > tr').removeClass('active');
 });
 
-
-
-// Выделение детали
-$("input#check-box-detal").change(function() {
-    if ($(this).attr('name') == 'all_select') {
-        console.log($(this))
-        if ($(this)[0].checked == true) {
-            $("input#check-box-detal").prop('checked', true);
-        } else {
-            $("input#check-box-detal").prop('checked', false);
-        }
-    };
-    if ($("input:checkbox:checked").length > 0) {
+// Выделение всех деталей
+$("input#check-box-all").change(function() {
+    if ($(this)[0].checked == true) {
+        $("input#check-box-detal").prop('checked', true);
         $(".control-panel").addClass('show');
         var total_checked_price = 0;
-        for (var i = 0; i <= $("input:checkbox:checked").length-1; i++) {
-            if ($("input:checkbox:checked")[i].getAttribute('name') == 'all_select') {
-                continue;
-            };
-            total_checked_price = total_checked_price + parseInt(($("input:checkbox:checked"))[i].parentElement.parentElement.querySelector('.detal-price').innerHTML.replace("₽", ""));
+        for (var i = 0; i <= $("input#check-box-detal:checked").length-1; i++) {
+            total_checked_price = total_checked_price + parseInt(($("input#check-box-detal:checked"))[i].parentElement.parentElement.querySelector('.detal-price').innerHTML.replace("₽", ""));
             $("span.total-select-price")[0].innerHTML = total_checked_price;
-            $(".total-select-count")[0].innerHTML = $("input:checkbox:checked").length;
+            $(".total-select-count")[0].innerHTML = $("input#check-box-detal:checked").length;
+            $("#button_add_upload_detals")[0].querySelector('span').innerHTML = $("#check-box-detal:checked").length;
+            $("#button_add_upload_detals")[0].removeAttribute('disabled');
         };
-        if ($(this)[0].name == 'all_select') {
-            $(".total-select-count")[0].innerHTML = $("input:checkbox:checked").length-1;
+    } else {
+        $("input#check-box-detal").prop('checked', false);
+        $(".control-panel").removeClass('show');
+        $("#button_add_upload_detals")[0].querySelector('span').innerHTML = $("#check-box-detal:checked").length;
+        $("#button_add_upload_detals")[0].setAttribute('disabled', true);
+    }
+}); 
+
+// Выделение детали по одной
+$("input#check-box-detal").change(function() {
+    if ($("#check-box-detal:checked").length > 0) {
+        $(".control-panel").addClass('show');
+        $("#button_add_upload_detals")[0].removeAttribute('disabled');
+        var total_checked_price = 0;
+        for (var i = 0; i <= $("#check-box-detal:checked").length-1; i++) {
+            total_checked_price = total_checked_price + parseInt(($("input#check-box-detal:checked"))[i].parentElement.parentElement.querySelector('.detal-price').innerHTML.replace("₽", ""));
+            $("span.total-select-price")[0].innerHTML = total_checked_price;
+            $(".total-select-count")[0].innerHTML = $("input#check-box-detal:checked").length;
+            $("#button_add_upload_detals")[0].querySelector('span').innerHTML = $("#check-box-detal:checked").length;
+            $("#button_add_upload_detals")[0].removeAttribute('disabled');
         };
     } else {
         $(".control-panel").removeClass('show');
+        $("#button_add_upload_detals")[0].querySelector('span').innerHTML = $("#check-box-detal:checked").length;
+        $("#button_add_upload_detals")[0].setAttribute('disabled', true);
     }
-});
+}); 
 
 // Нажатие на кнопку Выгрузка ... на панели управления
 $("#upload-button").click(function() {
     $(".export-panel").addClass('show');
 });
 
-// Выделение одной детали
-function selected(checkbox) {
-    var all_checkbox = document.getElementsByTagName('tbody');
-    var controlPanel = document.querySelector('.controlPanel')
-    var selectedCount = controlPanel.getElementsByTagName('span')[0].innerHTML;
-    var selectedPrice = controlPanel.getElementsByTagName('span')[1].innerHTML;
-    var detalPrice = checkbox.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML;
-    if (checkbox.checked) {
-        controlPanel.getElementsByTagName('span')[0].innerHTML = parseInt(selectedCount)+1;
-        controlPanel.getElementsByTagName('span')[1].innerHTML = parseInt(selectedPrice)+parseInt(detalPrice);
-    } else {
-        controlPanel.getElementsByTagName('span')[0].innerHTML = parseInt(selectedCount)-1;
-        controlPanel.getElementsByTagName('span')[1].innerHTML = parseInt(selectedPrice)-parseInt(detalPrice);
+// Добавление деталей на выгрузку
+$("#button_add_upload_detals").click(function() {
+    var all_checked_detals = $("#check-box-detal:checked");
+    var all_id_detals = []
+    for (var i = 0; i <= all_checked_detals.length-1; i++) {
+        all_id_detals.push(all_checked_detals[i].parentElement.parentElement.getAttribute('data-content'));
     }
-    if (controlPanel.getElementsByTagName('span')[0].innerHTML < 1) {
-        controlPanel.classList.remove('showPanel');
-    } else {
-        controlPanel.classList.add('showPanel');
-    }
-}
-// Выделение всех деталей
-function select_all(){
-    var all_checkbox = document.querySelectorAll("#checkbox");
-    var controlPanel = document.querySelector('.controlPanel')
-    var selectedPrice = controlPanel.getElementsByTagName('span')[1].innerHTML;
-    var i = 0;
-    if (document.getElementById("select_all").checked){
-        while(i < all_checkbox.length){
-            all_checkbox[i].checked = true;
-            selected(all_checkbox[i]);
-            i++;
+    console.log(all_id_detals);
+    $.ajax({
+        url: '/lk/detals_list/',
+        type: 'post',
+        data: {
+            'csrfmiddlewaretoken': csrftoken,
+            'type': 'add_to_upload',
+            'add_ids': all_id_detals,
+        },
+        success: function (data) {
+            location.reload()
         }
-        controlPanel.getElementsByTagName('span')[0].innerHTML = parseInt(i);
-    }
-    else{
-        while(i < all_checkbox.length){
-            all_checkbox[i].checked = false;
-            selected(all_checkbox[i]);
-            i++;
-        }
-        controlPanel.getElementsByTagName('span')[1].innerHTML = 0;
-    }
-}
+    });
+});
+
 // Изменение цены двойным кликом
 function edit_price(td) {
     var old_value = td.getElementsByTagName('span')[0].innerHTML;

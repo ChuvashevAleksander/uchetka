@@ -139,6 +139,7 @@ class UserDetal(models.Model):
 	stockroom = models.ForeignKey('Stock', on_delete=models.CASCADE)
 	photo = models.ForeignKey('Photo', on_delete=models.CASCADE, default=1)
 	donor_info = models.ForeignKey('AutoDonor', on_delete=models.CASCADE)
+	uploaded = models.BooleanField(default=False)
 	
 	def __str__(self):
 		return self.title
@@ -155,6 +156,8 @@ class Company(models.Model):
 	def __str__(self):
 		return self.title
 
+class UploadDetal(models.Model):
+	detal = models.OneToOneField('UserDetal', on_delete=models.CASCADE, unique=True)
 
-
-
+	def __str__(self):
+		return self.detal.title

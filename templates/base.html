@@ -83,14 +83,9 @@
 							</li>
 						</ul>
 					</li>
-					<li>
-						<a id="upload-ads" href="#">
-							<div class="button-icon">
-								<i class="fas fa-cloud-upload-alt"></i>
-							</div>
-							<div class="button-text">Выгрузка</div>
-						</a>
-					</li>
+					{% block upload %}
+						
+					{% endblock upload %}
 					<li>
 						<a href="{% url 'stats:get_stats_url' %}">
 							<div class="button-icon">

@@ -6,6 +6,16 @@
 {% block page_title %}
 Список деталей			
 {% endblock page_title %}
+{% block upload %}
+<li>
+	<a id="upload-ads" href="#">
+		<div class="button-icon">
+			<i class="fas fa-cloud-upload-alt"></i>
+		</div>
+		<div class="button-text">Выгрузка</div>
+	</a>
+</li>
+{% endblock upload %}
 {% block mainpanel %}
 <link rel="stylesheet" href="{% static "css/detals_list.css" %}">
 <link rel="stylesheet" href="{% static "css/donor_panel.css" %}">
@@ -118,10 +128,10 @@
 		<div class="border-block list-ads">
 			<div class="border-table">
 				<table class="upload-ads-table">
-					{% for detal in all_detals %}
+					{% for detal in upload_detals %}
 					<tr class="upload-tr">
 						<td class="delete"><div class="delete-button"><i class="fas fa-trash-alt"></i></div></td>
-						<td>{{detal.detal}}</td>
+						<td>{{detal.detal.title}}</td>
 						<td>{{detal.detal.donor_info}}</td>
 						<td>{{detal.detal.price}}₽</td>
 					</tr>
@@ -130,8 +140,7 @@
 			</div>
 		</div>
 		<div class="button-upload-panel">
-			<button disabled class="btn btn-primary">Добавить выбранные детали ( 0 )</button>
-			<button disabled class="btn btn-success">Сохранить</button>
+			<button disabled class="btn btn-success" id="button_add_upload_detals">Добавить выбранные детали ( <span>0</span> )</button>
 			<button class="btn btn-info">Очистить список</button>
 		</div>
 		<div class="full-info-panel">
@@ -161,7 +170,8 @@
 			<div class="head-table">
 				<table>
 					<tr >
-						<th class="checkbox"><input id="check-box-detal" type="checkbox" name='all_select'></th>
+						<th class="global"><i class="fas fa-globe"></i></th>
+						<th class="checkbox"><input id="check-box-all" type="checkbox" name='all_select'></th>
 						<th class="count-num">№</th>
 						<th class="detal-number"><i class="fas fa-sort"></i>Номер детали</th>
 						<th class="detal-title"><i class="fas fa-sort"></i>Деталь</th>
@@ -177,7 +187,8 @@
 			<div class="body-table">
 				<table>
 				{% for detal in all_detals %}
-					<tr >
+					<tr data-content="{{detal.detal.id}}" >
+						<td class="global {% if detal.detal.uploaded == True %}on{% endif %}"><i class="fas fa-globe"></i></td>
 						<td class="checkbox"><input id="check-box-detal" type="checkbox"></td>
 						<td class="count-num">{{detal.count}}</td>
 						<td class="detal-number">645GH2TD2</td>
@@ -209,7 +220,7 @@
 				</table>
 			</div>
 			<div class="button-block">
-				<button id="upload-button" class="btn btn-primary">Выгрузка ... </button>
+				<button id="upload-button" class="btn btn-primary">Выгрузить детали на площадки ...</button>
 				<button class="btn btn-info">Перемещение</button>
 				<button class="btn btn-success">Продажа</button>
 				<button class="btn btn-danger">Списание</button>
