@@ -19,13 +19,17 @@
 {% block mainpanel %}
 <link rel="stylesheet" href="{% static "css/detals_list.css" %}">
 <link rel="stylesheet" href="{% static "css/donor_panel.css" %}">
+<div class="full-photo">
+	<img src="{% static "img/nophoto.png" %}" alt="">
+	<div class="close-button"><i class="fas fa-times"></i></div>
+</div>
 <div class="pag-panel" id="pag-panel">
 	<ul class="pag-ul">
 		<li class="prev-page"><a href="?page=1"><i class="fas fa-angle-double-left"></i></a></li>
 		<li class="prev-page"><a href="?page={{active_page|add:-1}}"><i class="fas fa-chevron-left"></i></a></li>
 		{% for num in page.page_range %}
 		{% if  num == active_page %}
-		<li class="not-active active"><a href="?page={{num}}">{{num}}</a></li>
+		<li class="not-active active">{{num}}</li>
 		{% elif num > active_page|add:-2 and num < active_page|add:2 %}
 		<li class="not-active"><a href="?page={{num}}">{{num}}</a></li>
 		{% endif %}
@@ -100,7 +104,7 @@
 				<div class="title-site">Avito</div>
 			</div>
 			<div class="one-site">
-				<input type="checkbox">
+				<input type="checkbox" checked>
 				<div class="logo-site"><img src="{% static "img/logo-sites/drom.png" %}" alt=""></div>
 				<div class="title-site">Drom</div>
 			</div>
@@ -129,7 +133,7 @@
 			<div class="border-table">
 				<table class="upload-ads-table">
 					{% for detal in upload_detals %}
-					<tr class="upload-tr">
+					<tr class="upload-tr" data-content="{{detal.detal.pk}}">
 						<td class="delete"><div class="delete-button"><i class="fas fa-trash-alt"></i></div></td>
 						<td>{{detal.detal.title}}</td>
 						<td>{{detal.detal.donor_info}}</td>
@@ -141,7 +145,7 @@
 		</div>
 		<div class="button-upload-panel">
 			<button disabled class="btn btn-success" id="button_add_upload_detals">Добавить выбранные детали ( <span>0</span> )</button>
-			<button class="btn btn-info">Очистить список</button>
+			<button class="btn btn-info" id="clear_list_upload">Очистить список</button>
 		</div>
 		<div class="full-info-panel">
 			<div class="close-panel hide-button"><i class="fas fa-minus"></i></div>
@@ -186,21 +190,30 @@
 			</div>
 			<div class="body-table">
 				<table>
+				<tbody id="table-list-detals">
 				{% for detal in all_detals %}
-					<tr data-content="{{detal.detal.id}}" >
+					
+					<tr data-content="{{detal.detal.id}}" id="detal-in-list">
 						<td class="global {% if detal.detal.uploaded == True %}on{% endif %}"><i class="fas fa-globe"></i></td>
 						<td class="checkbox"><input id="check-box-detal" type="checkbox"></td>
 						<td class="count-num">{{detal.count}}</td>
 						<td class="detal-number">645GH2TD2</td>
 						<td class="detal-title">{{detal.detal}}</td>
 						<td class="detal-donor">{{detal.detal.donor_info}}</td>
-						<td class="detal-desc"></td>
+						<td class="detal-desc">Описание</td>
 						<td class="detal-stock">{{detal.detal.stockroom}}</td>
 						<td class="detal-stock-param">Ячейка</td>
-						<td class="detal-photo">Фото</td>
+						<td class="detal-photo">
+							<div class="mini-photo">
+								<img src="{% static "img/image_mini.png" %}" alt="">
+							</div>
+							
+						</td>
 						<td class="detal-price">{{detal.detal.price}}₽</td>
 					</tr>
 				{% endfor %}
+				</tbody>
+
 				</table>
 			</div>
 		</div>
@@ -221,9 +234,9 @@
 			</div>
 			<div class="button-block">
 				<button id="upload-button" class="btn btn-primary">Выгрузить детали на площадки ...</button>
-				<button class="btn btn-info">Перемещение</button>
-				<button class="btn btn-success">Продажа</button>
-				<button class="btn btn-danger">Списание</button>
+				<button class="btn btn-info" disabled>Перемещение</button>
+				<button class="btn btn-success" disabled>Продажа</button>
+				<button class="btn btn-danger" disabled>Списание</button>
 			</div>
 		</div>
 	</div>

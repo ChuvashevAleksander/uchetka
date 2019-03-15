@@ -1,32 +1,36 @@
-window.onscroll = function() {
-    // var tr = document.querySelector('.tableDetals ').querySelector('tbody').querySelectorAll('tr');
-    // var first_tr_top = tr[0].getBoundingClientRect().top;
-    // var last_tr_pos_bottom = tr[tr.length-1].getBoundingClientRect().bottom;
-    // var pag_panel = document.querySelector('.pag-panel');
-    // var active_page = parseInt(pag_panel.querySelector('.active').querySelector('a').innerHTML);
-    // var html = document.querySelector('html')
-    // console.log(last_tr_pos_bottom, html_height);
+$('.body-table').scroll(function(){
+    var active_page = $('li.active')[0].innerHTML;
+    var active = $('li.active')[0]
+    var next_elem = $('li.active')[0].nextElementSibling
+    var old_elem = $('li.active')[0].previousElementSibling
     
-    // if (html_height == last_tr_pos_bottom-1) {
-    //     console.log(active_page);
-    //     $.ajax({
-    //         url: '/lk/detals_list/',
-    //         type: 'get',
-    //         data: {
-    //             'page': active_page+1
-    //         },
-    //         success: function (data) {
-    //             console.log()
-    //             var active_page_button = pag_panel.querySelector('.active');
-    //             active_page_button.classList.remove('active');
-    //             active_page_button.nextSibling.nextElementSibling.classList.add('active');
-    //         }
-    //     });
-    // } else {
-    //     console.log();
-    // }
-}
-
+    if (this.scrollTop==this.scrollHeight-this.clientHeight) {
+        // loader('on');
+        $.ajax({
+            url: '/lk/detals_list/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': csrftoken,
+                'type': 'load_ajax_page',
+                'active_page': active_page,
+            },
+            success: function (data) {
+                for (var i = 0; i <= data.new_detals.length-1; i++) {
+                    $("#table-list-detals").append("<tr data-content="+(data.new_detals[i].id)+" id='detal-in-list'><td class='global '><i class='fas fa-globe'></i></td><td class='checkbox'><input id='check-box-detal' type='checkbox'></td><td class='count-num'>"+(active_page*25+i)+"</td><td class='detal-number'>645GH2TD2</td><td class='detal-title'>"+data.new_detals[i].title+"</td><td class='detal-donor'>"+data.new_detals[i].donor.mark+" "+data.new_detals[i].donor.model+" "+data.new_detals[i].donor.generation+"</td><td class='detal-desc'>Описание</td><td class='detal-stock'>"+data.new_detals[i].stockroom+"</td><td class='detal-stock-param'>Ячейка</td><td class='detal-photo'><div class='mini-photo'><img src='/static/img/image_mini.png'></div></td><td class='detal-price'>"+data.new_detals[i].price+"₽</td></tr>");
+                };
+                active.innerHTML = "<a href='?page="+active_page+"'>"+active_page+"</a>"
+                active.classList.remove('active')
+                next_elem.innerHTML = parseInt(active_page)+1
+                next_elem.classList.add('active')
+                // loader('off');
+                $(next_elem).after("<li class='not-active'><a href='?page="+(parseInt(next_elem.innerHTML)+1)+"'>"+(parseInt(next_elem.innerHTML)+1)+"</a></li>");
+                if (active_page > 1) {
+                    old_elem.remove();
+                }
+            }
+        });      
+    }
+})
 // Отправка формы при изменении малого фильтра
 
 
@@ -56,9 +60,11 @@ $(".hide-button").click(function() {
 });
 
 // Открыть панель доп информации
-$(".upload-ads-table  > tbody > tr").click(function() {
-    $('.full-info-panel').addClass('show');
-    $(this).addClass('active');
+$(".upload-ads-table  > tbody > tr").click(function(e) {
+    if (!$(e.target).is('i')) { // игнорировать если кликнули чекбокс
+        $('.full-info-panel').addClass('show');
+        $(this).addClass('active');
+    }
 });
 
 // Закрыть панель доп информации
@@ -66,6 +72,25 @@ $(".hide-button").click(function() {
     $('.full-info-panel').removeClass('show');
     $('.upload-ads-table  > tbody > tr').removeClass('active');
 });
+
+// Показать фото детали
+$(".mini-photo").click(function() {
+    $('.backLoad').addClass('show');
+    $('.full-photo').addClass('show');
+});
+
+// Скрыть фото детали
+$(".close-button").click(function() {
+    $($(this).parent()[0]).removeClass('show');
+    $('.backLoad').removeClass('show');
+});
+
+// Нажатие на кнопку Выгрузка ... на панели управления
+$("#upload-button").click(function() {
+    $(".export-panel").addClass('show');
+});
+
+
 
 // Выделение всех деталей
 $("input#check-box-all").change(function() {
@@ -108,19 +133,16 @@ $("input#check-box-detal").change(function() {
     }
 }); 
 
-// Нажатие на кнопку Выгрузка ... на панели управления
-$("#upload-button").click(function() {
-    $(".export-panel").addClass('show');
-});
+
 
 // Добавление деталей на выгрузку
 $("#button_add_upload_detals").click(function() {
+    loader('on');
     var all_checked_detals = $("#check-box-detal:checked");
     var all_id_detals = []
     for (var i = 0; i <= all_checked_detals.length-1; i++) {
         all_id_detals.push(all_checked_detals[i].parentElement.parentElement.getAttribute('data-content'));
     }
-    console.log(all_id_detals);
     $.ajax({
         url: '/lk/detals_list/',
         type: 'post',
@@ -134,6 +156,61 @@ $("#button_add_upload_detals").click(function() {
         }
     });
 });
+
+// Удалить деталь из списка выгрузки
+$("td.delete").click(function() {
+    loader('on');
+    var tr_delete = $($(this).parent()[0])
+    var id_delete = $($(this).parent()[0])[0].getAttribute('data-content');
+    $.ajax({
+        url: '/lk/detals_list/',
+        type: 'post',
+        data: {
+            'csrfmiddlewaretoken': csrftoken,
+            'type': 'delete_in_upload',
+            'delete_id': id_delete,
+        },
+        success: function (data) {
+            tr_delete[0].remove();
+            loader('off');
+            $('[data-content = '+id_delete+']')[0].querySelector('.global').classList.remove('on');
+        }
+    });
+});
+
+// Очистить список выгрузки
+$("#clear_list_upload").click(function() {
+    loader('on');
+    var all_tr = $('.upload-tr')
+    var all_delete_id = []
+    for (var i = 0; i <= all_tr.length-1; i++) {
+        all_delete_id.push(all_tr[i].getAttribute('data-content'));
+    }
+    $.ajax({
+        url: '/lk/detals_list/',
+        type: 'post',
+        data: {
+            'csrfmiddlewaretoken': csrftoken,
+            'type': 'clear_upload_list',
+            'all_delete_id': all_delete_id,
+        },
+        success: function (data) {
+            for (var i = 0; i <= all_tr.length-1; i++) {
+                try {
+                    all_tr[i].remove();
+                    $('[data-content = '+all_delete_id[i]+']')[0].querySelector('.global').classList.remove('on');
+                } catch (err) {
+                    continue
+                }
+            }
+            loader('off');
+        }
+    });
+});
+
+
+
+
 
 // Изменение цены двойным кликом
 function edit_price(td) {

@@ -152,7 +152,7 @@ class Company(models.Model):
 	city = models.CharField(max_length=50)
 	staff_users = models.ManyToManyField(User, blank=True)
 	stocks = models.ManyToManyField(Stock, blank=True)
-	
+
 	def __str__(self):
 		return self.title
 

@@ -8,11 +8,11 @@ window.onload = function(){
 // прелоадер
 function loader(param) {
 	if (param == 'on') {
-		document.querySelector('.backLoad').removeAttribute('style');
+		document.querySelector('.backLoad').classList.add('show');
 		document.querySelector('.cssload-loader').setAttribute('style', 'display: block;');
 	} 
 	if (param == 'off') {
-		document.querySelector('.backLoad').setAttribute('style', 'display: none');
+		document.querySelector('.backLoad').classList.remove('show');
 		document.querySelector('.cssload-loader').removeAttribute('style');
 	}
 }
@@ -48,7 +48,7 @@ $.ajaxSetup({
 // Loader
 function show_loader(){
 	document.querySelector('.cssload-loader').setAttribute('style', 'display: block;');
-	document.querySelector('.backLoad').removeAttribute('style');
+	document.querySelector('.backLoad').classList.add('show');
 	document.querySelector('.modal').setAttribute('style', 'display: none');
 }
 

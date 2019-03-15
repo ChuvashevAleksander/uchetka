@@ -23,7 +23,8 @@ class DetalList(View):
 		detals_company = UserDetal.objects.filter(company=company[0]).order_by('id')
 		query_result = Paginator(detals_company, 25)
 		if request.is_ajax():
-			data =  self.load_ajax_page(num_page)
+			# query_result = self.filter_detals(request)
+			data =  self.load_ajax_page(num_page, query_result)
 			return HttpResponse(json.dumps(data), content_type="application/json")
 		else:
 			return self.render_template(request, query_result, num_page)
@@ -36,6 +37,12 @@ class DetalList(View):
 				data = self.load_cats(request)
 			elif request.POST['type'] == 'add_to_upload':
 				data = self.add_to_upload(request)
+			elif request.POST['type'] == 'delete_in_upload':
+				data = self.delete_in_upload(request)
+			elif request.POST['type'] == 'clear_upload_list':
+				data = self.clear_upload_list(request)
+			elif request.POST['type'] == 'load_ajax_page':
+				data =  self.load_ajax_page(request)	
 			return HttpResponse(json.dumps(data), content_type="application/json")
 		else:
 			query_result = self.filter_detals(request)
@@ -63,15 +70,22 @@ class DetalList(View):
 		return Paginator(detals_company, 25)
 
 	# Подгрузка страниц 
-	def load_ajax_page(self, num_page):
-		data = {'new_detals': [{'title': elem.detal.title,
-							    'donor': {'mark': elem.donor_info.mark.title,
-							 		      'model': elem.donor_info.model.title,
-							 		      'generation': elem.donor_info.generation.title},
-							    'price': elem.price,
-							    'description': elem.description,
-							    'stockroom': elem.stockroom.title,
-		} for elem in query_result.page(num_page).object_list ] }
+	def load_ajax_page(self, request):
+		num_page = int(request.POST['active_page'])
+		company = Company.objects.filter(staff_users=request.user)
+		detals_company = UserDetal.objects.filter(company=company[0]).order_by('id')
+		query_result = Paginator(detals_company, 25)
+		data = {'new_detals': [{'id': elem.id,
+								'title': elem.title,
+								'price': elem.price,
+								'description': elem.description,
+								'stockroom': elem.stockroom.title,
+								'photo': elem.photo.photo.url,
+								'uploaded': elem.uploaded,
+								'donor': {'mark': elem.donor_info.mark.title,
+										  'model': elem.donor_info.model,
+										  'generation': elem.donor_info.generation}
+								} for elem in query_result.page(num_page).object_list ] }
 		return data
 
 	# Подгрузка каталогов
@@ -91,6 +105,25 @@ class DetalList(View):
 			detal_obj.uploaded = True
 			detal_obj.save()
 			UploadDetal.objects.create(detal=detal_obj)
+		return 'good'
+
+	# Удаление детали с выгрузки
+	def delete_in_upload(self, request):
+		user_detal_obj = UserDetal.objects.get(id=request.POST['delete_id'])
+		user_detal_obj.uploaded = False
+		user_detal_obj.save()
+		upload_detal_obj = UploadDetal.objects.get(detal=user_detal_obj)
+		upload_detal_obj.delete()
+		return 'good'
+
+	# Очистка списка выгрузки
+	def clear_upload_list(self, request):
+		for elem in request.POST.getlist('all_delete_id[]'):
+			user_detal_obj = UserDetal.objects.get(id=elem)
+			user_detal_obj.uploaded = False
+			user_detal_obj.save()
+			upload_detal_obj = UploadDetal.objects.get(detal=user_detal_obj)
+			upload_detal_obj.delete()
 		return 'good'
 
 	# Рендеринг шаблона
