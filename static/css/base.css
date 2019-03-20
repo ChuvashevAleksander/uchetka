@@ -47,7 +47,7 @@ img, embed, object, video, svg {max-width: 100%;}
     border: 1px solid rgba(158, 158, 158, 0.45);
     border-radius: 10px;
     box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4), 
-                inset 0 0 300px 10px rgba(0, 0, 0, 0.1)
+    inset 0 0 300px 10px rgba(0, 0, 0, 0.1)
 }
 
 .border-table {
@@ -59,7 +59,7 @@ img, embed, object, video, svg {max-width: 100%;}
     border-bottom: 1px solid #c7c7c7; 
     font-style: italic;
     color: #3d6589;
-  }
+}
 
 .header-title-block { 
     position: absolute;
@@ -74,7 +74,7 @@ img, embed, object, video, svg {max-width: 100%;}
     letter-spacing: 2px;
     background: white;
     box-shadow: inset -2px -4px 7px 0 rgb(154, 154, 154), 
-                inset 0 0 200px 0 #d1d1d1;
+    inset 0 0 200px 0 #d1d1d1;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
@@ -84,7 +84,7 @@ img, embed, object, video, svg {max-width: 100%;}
     position: relative;
     border-bottom-right-radius: 0;
     box-shadow: inset 0px -4px 7px 0 rgb(154, 154, 154), 
-                inset 0 0 200px 0 #d1d1d1;
+    inset 0 0 200px 0 #d1d1d1;
 }
 
 
@@ -347,7 +347,7 @@ html.modal-active, body.modal-active {
     position: absolute;
     left: 50%;
     font-size: 10pt;
-    margin: 26px 0 0 -92px;
+    margin: -10px 0 0 -92px;
 }
 
 .auto::before { 
@@ -492,6 +492,8 @@ html.modal-active, body.modal-active {
     border-right: 1px solid #c5c5c5bf;
 }
 
+.left-col .selectAuto .input-group-prepend { margin-bottom: 20px; }
+
 .right-col {
     display: grid;
     grid-template-rows: 170px auto;
@@ -563,65 +565,7 @@ html.modal-active, body.modal-active {
 }
 
 /*** Панель добавления склада ***/
-.stock-create {
-    position: absolute;
-    width: 0%;
-    height: 80%;
-    background: white;
-    top: 50px;
-    right: 0;
-    transition: all 0.65s ease-out;;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 20px;
-    padding: 20px;
-    overflow: hidden;
-}
 
-.stock-create.show { width: 100%; }
-
-.stock-create .left-column {
-    display: grid;
-    grid-template-rows: 1fr 3fr;
-    padding: 20px;
-    border-right: 1px solid #c5c5c5;
-}
-
-.stock-create .left-column .title-field .input-group-text { font-size: 8pt; border-top-right-radius: 0; border-bottom-right-radius: 0;}
-.stock-create .left-column input { 
-    font-size: 8pt; 
-    width: 260px; 
-    height: 30px; 
-    border-left: none; 
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-}
-
-.stock-create .right-column { padding: 20px 35px 0 0; }
-.stock-create .right-column input { 
-    height: 30px; 
-    border-left: none; 
-    font-size: 8pt;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-}
-.stock-create .right-column .input-group-prepend { margin-bottom: 20px; }
-.stock-create .right-column .input-group-text { 
-    width: 160px; 
-    font-size: 8pt;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
-
-.street-house {display: grid; grid-template-columns: 2fr 1fr;}
-
-.bottom-button-block { margin: 25px 0 0 0; overflow: hidden; display: inline-flex;} 
-.bottom-button-block button { 
-    font-size: 10pt;
-    width: 125px;
-    height: 35px;
-    box-shadow: inset 0 0 5px 0px;
-}
 /*** Анимация переключения панелей ***/
 
 
@@ -684,6 +628,8 @@ html.modal-active, body.modal-active {
     perspective: 780px;
     z-index: 7;
 }
+
+.cssload-loader.show { display: block; }
 
 .cssload-inner {
   position: absolute;

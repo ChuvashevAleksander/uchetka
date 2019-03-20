@@ -4,6 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('', rediredct_detal_list_page),
+    path('load_cat/', load_cats),
     path('logout/', logout_lk, name='logout_url'),
     path('add_random_detals/', add_random_detal),
     path('add_random_donor/', add_random_donor),

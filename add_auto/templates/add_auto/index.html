@@ -19,6 +19,11 @@
 			<hr>
 			<div class="list-block">
 				<ul>
+					{% for elem in sections.sections %}
+						<li><a id="group" href="#" data-content="{{elem.id}}"><i class="fas fa-caret-right"></i>{{elem.description}}</a>
+					{% endfor %}
+
+
 					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Двигатель и система зажигания</a>
 						<ul class="subgroup hide">
 							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
@@ -36,183 +41,6 @@
 							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
 						</ul>
 					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Интерьер</a>
-						<ul class="subgroup hide">
-							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
-							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#"><i class="fas fa-caret-right"></i>Деталь</a></li>
-									<li><a href="#"><i class="fas fa-caret-right"></i>Деталь</a></li>
-									<li><a href="#"><i class="fas fa-caret-right"></i>Деталь</a></li>
-									<li><a href="#"><i class="fas fa-caret-right"></i>Деталь</a></li>
-									<li><a href="#"><i class="fas fa-caret-right"></i>Деталь</a></li>
-								</ul>
-							</li>
-							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
-							<li><a href="#"><i class="fas fa-caret-right"></i>Подгруппа</a></li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Кондиционер и отопитель</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Кузовные запчасти</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подвеска</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Рулевое управлени</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Система пассивной безопасности</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Топливная система</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Тормозная система</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Электрика и свет</a>
-						<ul class="subgroup hide">
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-							<li><a id="group" href="#"><i class="fas fa-caret-right"></i>Подгруппа</a>
-								<ul class="subgroup hide">
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-									<li><a href="#">Деталь</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
 				</ul>
 			</div>
 		</div>
@@ -221,15 +49,13 @@
 				<div class="gui-panel block-desing">
 					<div class="header-title-block nav-bar">
 						<ul>
-							<li>Audi A4 2015 <i class="fas fa-chevron-right"></i></li>
-							<li>Двигатель <i class="fas fa-chevron-right"></i></li>
-							<li>Подгруппа <i class="fas fa-chevron-right"></i></li>
+							<li>{{selected_auto}}<i class="fas fa-chevron-right"></i></li>
 						</ul>
 					</div>
 					<div class="content-add-panel">
 						<div class="card-detal-group">
 							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group"></div>
+							<div class="title-group">Заголовок</div>
 						</div>
 						<div class="card-detal-group">
 							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>

@@ -178,13 +178,12 @@ td.global, th.global { padding-left: 0px;}
     border-radius: 2px;
 }
 
-.button-block {
+.control-panel .button-block {
     display: inline-block;
     padding-top: 17px;
-    width: 65%;
 }
 
-.button-block button { font-size: 8pt; }
+.control-panel .button-block button { font-size: 8pt; }
 
 #upload-button { float: right; width: auto;}
 

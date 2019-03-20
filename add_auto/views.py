@@ -1,33 +1,41 @@
 import json
+import requests
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic import View
 
 from lk.models import *
 from lk import models as modellls
 
-def select_auto(request):
-	if request.is_ajax():
+
+class AddDetalPage(View):
+	def get(self, request):
+		return self.render_template(request)
+
+	def post(self, request):
 		print(request.POST)
-		if 'selectedMark' in request.POST:
-			selectedMark = request.POST['selectedMark']
-			mark_obj = AutoMark.objects.get(value=selectedMark)
-			query_models = AutoModel.objects.filter(mark=mark_obj)
-			models_dict = []
-			for model in query_models:
-				models_dict.append({'title': model.title, 'value': model.value})
-			data = json.dumps({'models': models_dict})
-		if 'selectedModel' in request.POST:
-			selectedModel = request.POST['selectedModel']
-			model_obj = AutoModel.objects.get(value=selectedModel)
-			query_generations = AutoGeneration.objects.filter(model=model_obj)
-			generations_dict = []
-			for gen in query_generations:
-				generations_dict.append({'title': gen.year, 'value': gen.value})
-			data = json.dumps({'generations': generations_dict})
-		return HttpResponse(data, content_type="application/json")
+		if request.POST['cat'] == 'getSections':
+			data = self.load_sections(request)
+			return self.render_template(request, data)
 
-def get_addauto_page(request):
-	print(request.POST)
+	def get_data(self, data):
+		r = requests.post('https://partsapi.ru/api.php', data=data)
+		return json.loads(r.content)
 
-	return render(request, 'add_auto/index.html')
+	def load_sections(self, request):
+		data = {'act': 'getSections', 'modification_id': request.POST['generation'], 'level': 0, 'key':'283R8Q8ckCYq9cyQSgYiXDpYFguSf7ox', 'group': 'passenger'}
+		sections = {'sections': self.get_data(data)}
+		return sections
+
+
+
+
+	def render_template(self, request, data):
+		context = {'sections': data}
+		for elem in data:
+			print(data)
+		return render(request, 'add_auto/index.html', context=context)
+
+
+

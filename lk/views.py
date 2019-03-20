@@ -5,13 +5,26 @@ import requests
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
+from django.http import HttpResponse
 
 from .models import *
 
+# Подгрузка каталогов
+def load_cats(request):
+	data = {'key':'283R8Q8ckCYq9cyQSgYiXDpYFguSf7ox', 'group': 'passenger'}
+	print(request.POST)
+	if request.is_ajax():
+		if request.POST['cat'] == 'getModels':
+			data.update({'act': 'getModels', 'make': request.POST['mark']})
+		elif request.POST['cat'] == 'getCars':
+			data.update({'act': 'getCars', 'make': request.POST['mark'], 'model': request.POST['model']})
+	r = requests.post('https://partsapi.ru/api.php', data=data)
+	return HttpResponse(json.dumps(json.loads(r.content)), content_type="application/json")
 
 def logout_lk(request):
 	logout(request)
 	return redirect('/')
+
 def rediredct_detal_list_page(request):
 	if request.user.username == 'admin':
 		return redirect('/admin/')

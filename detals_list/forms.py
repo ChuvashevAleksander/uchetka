@@ -21,10 +21,10 @@ class SmallFilter(forms.Form):
 	mark.widget.attrs.update({'class': 'custom-select', 'id': 'all_marks'})
 
 	model = forms.ChoiceField(widget=forms.Select, choices=[('noselect', 'Все модели')])
-	model.widget.attrs.update({'class': 'custom-select', 'id': 'all_models'})
+	model.widget.attrs.update({'class': 'custom-select', 'id': 'all_models', 'disabled': ''})
 
 	generation = forms.ChoiceField(widget=forms.Select, choices=[('noselect', 'Все поколения')])
-	generation.widget.attrs.update({'class': 'custom-select', 'id': 'all_generations'})
+	generation.widget.attrs.update({'class': 'custom-select', 'id': 'all_generations', 'disabled': ''})
 
 	number = forms.CharField(max_length=50)
 	number.widget.attrs.update({'class': 'form-control', 'placeholder': 'Оригинальный номер'})

@@ -48,7 +48,7 @@
 		<div class="menu">
 				<ul id="accordion" class="accordion">
 					<li>
-						<a href="/lk/detals_list/" onclick="show_loader()">
+						<a href="/lk/detals_list/">
 							<div class="button-icon">
 								<i class="fas fa-list-ul"></i>
 							</div>
@@ -157,6 +157,7 @@
 					<div class="selectAutoDonor">
 						<form action="/lk/add_auto/" method="POST">
 							{% csrf_token %}
+							<input type="hidden" name="cat" value="getSections">
 							<div class="left-col">
 								<hr class="vin">
 								<div class="titleModal">
@@ -193,8 +194,8 @@
 											Вам необходимо добавить хотя-бы один склад. Перейдите на <a id="open_add_stock_panel" href="#" class="alert-link" onclick="change_modal_content(this)">страницу добавления</a>.
 										</div>
 									{% else %}
-										<div class="alert alert-primary" role="alert">
-											Выбранный автомобиль: Audi A4 2017г
+										<div class="alert alert-primary" role="alert" id="selected_auto">
+											Выбранный автомобиль: <span></span>
 										</div>
 									{% endif %}
 								</div>
@@ -205,48 +206,7 @@
 							</div>
 						</form>
 					</div>
-					<form method="POST" action="{% url 'stocks:create' %}">
-						{% csrf_token %}
-						<div class="stock-create">
-							<div class="left-column">
-								<div class="title-field">
-									<div class="input-group-prepend">
-										<div class="input-group-text">Название склада:</div>
-										{{form_stock.title}}
-									</div>
-								</div>
-								<div class="image-stock"><img src="{% static "img/stock.png" %}" alt=""></div>
-							</div>
-							<div class="right-column">
-								<div class="input-group-prepend">
-									<div class="input-group-text">Государство:</div>
-									{{form_stock.country}}
-								</div>
-								<div class="input-group-prepend">
-									<div class="input-group-text">Регион/область:</div>
-									{{form_stock.region}}
-								</div>
-								<div class="input-group-prepend">
-									<div class="input-group-text">Город/село:</div>
-									{{form_stock.city}}
-								</div>
-								<div class="street-house">
-									<div class="input-group-prepend">
-										<div class="input-group-text" style="width: 80px;">Улица:</div>
-										{{form_stock.street}}
-									</div>
-									<div class="input-group-prepend">
-										<div class="input-group-text" style="margin-left: 10px; width: 100px;">Дом:</div>
-										{{form_stock.house}}
-									</div>
-								</div>
-								<div class="bottom-button-block">
-									<button type="button" class="btn btn-danger" onclick="change_modal_content(this)">Отмена</button>
-									<button type="submit" class="btn btn-success" style="margin-left: 20px;">Создать склад</button>
-								</div>
-							</div>
-						</div>
-					</form>
+					
 				</div>
 			</div>
 		</div>

@@ -1,22 +1,3 @@
-
-
-//после загрузки страницы
-window.onload = function(){
-	loader('off');
-}
-
-// прелоадер
-function loader(param) {
-	if (param == 'on') {
-		document.querySelector('.backLoad').classList.add('show');
-		document.querySelector('.cssload-loader').setAttribute('style', 'display: block;');
-	} 
-	if (param == 'off') {
-		document.querySelector('.backLoad').classList.remove('show');
-		document.querySelector('.cssload-loader').removeAttribute('style');
-	}
-}
-
 // No edit, this for POST
 function getCookie(name) {
     var cookieValue = null;
@@ -43,16 +24,32 @@ $.ajaxSetup({
         }
     }
 });
-// end
+//////////  END ////////////
 
-// Loader
-function show_loader(){
-	document.querySelector('.cssload-loader').setAttribute('style', 'display: block;');
-	document.querySelector('.backLoad').classList.add('show');
-	document.querySelector('.modal').setAttribute('style', 'display: none');
+
+
+
+//после загрузки страницы
+window.onload = function(){
+	loader('off');
 }
 
-// Меню
+// прелоадер
+function loader(param) {
+	if (param == 'on') {
+		$('.backLoad').addClass('show');
+		$('.cssload-loader').addClass('show');
+	} 
+	if (param == 'off') {
+		$('.backLoad').removeClass('show');
+		$('.cssload-loader').removeClass('show');
+	}
+}
+
+
+//////// Меню ////////
+
+
 // Подпункты
 $(document).on('click','#group-menu', function(){
 	if (this.parentElement.querySelector('.submenu').getAttribute('style') == null){
@@ -62,140 +59,70 @@ $(document).on('click','#group-menu', function(){
 	}
 });
 
-
-function change_params_donor() {
-    $.ajax({
-        url: '/lk/detals_list/change_donor_params/',
-        type: 'post',
-        data: {
-            'csrfmiddlewaretoken': csrftoken
-        },
-        success: function (data) {
-            var right_panel = document.querySelector('.right-panel');
-            for (var i_param = 0; i_param < data.params.length; i_param++) {
-                var name = Object.keys(data.params[i_param])[0];
-                var select_param = right_panel.querySelector('#'+name);
-                select_param.removeAttribute('disabled');
-                console.log(data.params[i_param][name]);
-                for (var i_option = 0; i_option < data.params[i_param][name].length; i_option++) {
-                    select_param.options[i_option] = new Option(data.params[i_param][name][i_option].title, data.params[i_param][name][i_option].value);
-                    if (data.params[i_param][name][i_option].value == 'noselect') {
-                        select_param.options[i_option].setAttribute('selected', '');
-                    };
-                }
-            }
-        }
-    });
-}
-
-function clear_options() {
-	var selectModel = document.querySelector('#all_models');
-	for (i = 0; i < selectModel.options.length; i++) {
-		console.log(selectModel.options[i]);
-		selectModel.options[i].remove();
-	};
-}
-
-function add_new_options(data) {
-	var selectModel = document.querySelector('#all_models');
-	for (var i = 0; i < data.length; i++) {
-		selectModel.options[i] = new Option(data[i].name, data[i].id);
-	};
-}
-
 $(function() {
-	$("#all_marks").change(function() {
-		var selectMark = document.querySelector('#all_marks');
+	$("select#all_marks").change(function() {
+		var select_mark = $(this);
+		var select_model = select_mark[0].parentElement.nextElementSibling.querySelector('#all_models');
+		var select_gen = select_model.parentElement.nextElementSibling.querySelector('#all_generations');
+		$(select_model).empty();
+		$(select_model).append( $('<option value="noselect">Все модели</option>'));
+		$(select_model).attr('disabled','disabled');
+		$(select_gen).empty();
+		$(select_gen).append( $('<option value="noselect">Все поколения</option>'));
+		$(select_gen).attr('disabled','disabled');
 		$.ajax({
-			url:'/lk/detals_list/', 
+			url:'/lk/load_cat/', 
 			type:'POST', 
 			data: {
-				'type': 'load_cats',
 				'cat': 'getModels',
-				'mark':  selectMark.options[selectMark.selectedIndex].value,
-				'csrfmiddlewaretoken': csrftoken
-			}, 
-			success: function(res) {
-				console.log(res);
-				add_new_options(res);
-			}
-		});
-	});
-	$("#all_models").change(function() {
-		var selectMark = document.querySelector('#all_marks');
-		var selectModel = document.querySelector('#all_models');
-		var selectGen = document.querySelector('#all_generations');
-		$.ajax({
-			url:'/lk/detals_list/', 
-			type:'POST', 
-			data: {
-				'type': 'load_cats',
-				'cat': 'getCars',
-				'mark':  selectMark.options[selectMark.selectedIndex].value,
-				'model':  selectModel.options[selectModel.selectedIndex].value,
+				'mark': $(select_mark, ':selected').val(),
 				'csrfmiddlewaretoken': csrftoken
 			}, 
 			success: function(data) {
-				console.log(data);
-				var k = 0
-				for (var i = 0; i < data.length; i++) {
-					if (data[i].attributegroup == 'General') {
-						selectGen.options[k] = new Option(data[i].name + ' ' + data[i].displayvalue, data[i].id);
-						k++
-					} else {
-						continue
+				$(select_gen).append( $('<option value="noselect">Все поколения</option>'));
+				if ($(select_mark, ':selected').val() != 'noselect') {
+					for (var i = 0; i < data.length; i++) {
+						$(select_model).append( $('<option value="'+data[i].id+'">'+data[i].name+'</option>'));
 					}
-				};
+					$(select_model).removeAttr('disabled');
+				}
 			}
 		});
 	});
 });
 
-
-function load_generations(selectModel) {
-	var panel = selectModel.parentElement.parentElement.parentElement;
-	$.ajax({
-		url: '/lk/add_auto/select_auto/',
-		type: 'post',
-		data: {
-			'selectedModel': selectModel.options[selectModel.selectedIndex].value,
-			'csrfmiddlewaretoken': csrftoken
-		},
-		success: function (data) {
-			console.log('done');
-			var selectGen = panel.querySelector('#all_generations');
-			selectGen.options[0] = new Option(('noselect', 'Все поколения'))
-			for (var i = 0; i < data.generations.length; i++) {
-				selectGen.options[i+1] = new Option(data.generations[i].title, data.generations[i].value)
+$(function() {
+	$("select#all_models").change(function() {
+		var select_model = $(this);
+		var select_mark = select_model[0].parentElement.previousElementSibling.querySelector('#all_marks');
+		var select_gen = select_model[0].parentElement.nextElementSibling.querySelector('#all_generations');
+		$(select_gen).empty();
+		$(select_gen).append( $('<option value="noselect">Все поколения</option>'));
+		$(select_gen).attr('disabled','disabled');
+		$.ajax({
+			url:'/lk/load_cat/', 
+			type:'POST', 
+			data: {
+				'cat': 'getCars',
+				'mark':  $(select_mark, ':selected').val(),
+				'model':  $(select_model, ':selected').val(),
+				'csrfmiddlewaretoken': csrftoken
+			}, 
+			success: function(data) {
+				if ($(select_model, ':selected').val() != 'noselect') {
+					for (var i = 0; i < data.length; i++) {
+						if (data[i].attributegroup == 'General') {
+							$(select_gen).append( $('<option value="'+data[i].id+'">'+data[i].name+'</option>'));
+						} else {
+							continue
+						}
+					};
+					$(select_gen).removeAttr('disabled');
+				} 				
 			}
-		}
+		});
 	});
-}
-function donorTabs(newActiveTab) {
-	var changeContent = function() {
-		 var paramsBlock = document.querySelector('.donorParmas');
-		 var photoBlock = document.querySelector('.donorPhoto');
-		 if (newActiveTab.getAttribute('data-content') == 'photo') {
-		 	photoBlock.classList.add('show');
-		 	paramsBlock.classList.remove('show');
-		 } else	{
-		 	photoBlock.classList.remove('show');
-		 	paramsBlock.classList.add('show');
-		 }
-	}
-	var oldActiveTab = newActiveTab.parentElement.querySelector('.active');
-	oldActiveTab.classList.remove('active');
-	newActiveTab.classList.add('active');
-	changeContent();
-}
-function change_modal_content(changeButton) {
-	var modalContent = document.querySelector('.modalcontent');
-	if (changeButton.getAttribute('id') == 'open_add_stock_panel') {
-		modalContent.querySelector('.stock-create').classList.add('show');
-	} else {
-		modalContent.querySelector('.stock-create').classList.remove('show');
-	}
-}
+});
 
 function not_permissions() {
 	document.querySelector('.alert-message').innerHTML = 'Недостаточно прав!';

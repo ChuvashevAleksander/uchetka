@@ -6,17 +6,17 @@ class Photo(forms.Form):
 
 
 class MarkModelGen(forms.Form):
-	all_marks = [(elem.value, elem.title) for elem in AutoMark.objects.all()]
+	all_marks = [('noselect', 'Все марки')]
+	for elem in AutoMark.objects.all():
+		all_marks.append((elem.value, elem.title))
 	mark = forms.ChoiceField(widget=forms.Select, choices=all_marks)
-	mark.widget.attrs.update({'class': 'custom-select', 'id': 'all_marks', 'name': 'selectMark',
-							  'onchange': 'load_models(this)'})
+	mark.widget.attrs.update({'class': 'custom-select', 'id': 'all_marks', 'data-name': 'add'})
 
-	model = forms.ChoiceField(widget=forms.Select)
-	model.widget.attrs.update({'class': 'custom-select', 'id': 'all_models', 'name': 'selectModel',
-							   'onchange': 'load_generations(this)'})
+	model = forms.ChoiceField(widget=forms.Select, choices=[('noselect', 'Все модели')])
+	model.widget.attrs.update({'class': 'custom-select', 'id': 'all_models', 'data-name': 'add', 'disabled': ''})
 
-	generation = forms.ChoiceField(widget=forms.Select)
-	generation.widget.attrs.update({'class': 'custom-select', 'id': 'all_generations', 'name': 'selectGeneration'})
+	generation = forms.ChoiceField(widget=forms.Select, choices=[('noselect', 'Все поколения')])
+	generation.widget.attrs.update({'class': 'custom-select', 'id': 'all_generations', 'data-name': 'add', 'disabled': ''})
 
 
 class DonorForm(forms.Form):
