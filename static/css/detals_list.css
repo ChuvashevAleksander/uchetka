@@ -110,7 +110,7 @@ td.global, th.global { padding-left: 0px;}
     z-index: 7;
     text-align: center;
     border-radius: 10px;
-    box-shadow: 0 0 200px 13px #6f6f6f;
+    box-shadow: 0 0 100px 13px #6f6f6f;
 }
 
 .full-photo.show { display: block; }

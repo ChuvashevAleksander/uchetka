@@ -22,12 +22,7 @@ class DetalList(View):
 		company = Company.objects.filter(staff_users=request.user)
 		detals_company = UserDetal.objects.filter(company=company[0]).order_by('id')
 		query_result = Paginator(detals_company, 25)
-		if request.is_ajax():
-			# query_result = self.filter_detals(request)
-			data =  self.load_ajax_page(num_page, query_result)
-			return HttpResponse(json.dumps(data), content_type="application/json")
-		else:
-			return self.render_template(request, query_result, num_page)
+		return self.render_template(request, query_result, num_page)
 
 	# POST Запрос
 	def post(self, request):
@@ -43,49 +38,63 @@ class DetalList(View):
 				data = self.clear_upload_list(request)
 			elif request.POST['type'] == 'load_ajax_page':
 				data =  self.load_ajax_page(request)	
+			elif request.POST['type'] == 'filter_ajax':
+				query_result =  self.filter_detals(request)
+				
+				data = self.generation_dict_detals(request, query_result)
 			return HttpResponse(json.dumps(data), content_type="application/json")
 		else:
 			query_result = self.filter_detals(request)
 			return self.render_template(request, query_result)
 
+	# Генерация словаря деталей		
+	def generation_dict_detals(self, request, query_result, num_page=1):
+		query_result = {'new_detals': [{'id': elem.id,
+										'title': elem.title,
+										'price': elem.price,
+										'description': elem.description,
+										'stockroom': elem.stockroom.title,
+										'photo': elem.photo.photo.url,
+										'uploaded': elem.uploaded,
+										'donor': {'mark': elem.donor_info.mark.title,
+												  'model': elem.donor_info.model,
+												  'generation': elem.donor_info.generation}
+										} for elem in query_result.page(num_page).object_list ] }
+		return query_result
+
 	# Фильтрация деталей
 	def filter_detals(self, request):
 		company = Company.objects.filter(staff_users=request.user)
 		detals_company = UserDetal.objects.filter(company=company[0])
-		if request.POST['detal'] != 'noselect':
-			detals_company = detals_company.filter(detal__value=request.POST['detal'])
-		if request.POST['mark'] != 'noselect':
-			donor =AutoDonor.objects.filter(mark__value=request.POST['mark'])
-			detals_company = detals_company.filter(donor_info__in=donor)
-		if request.POST['model'] != 'noselect':
-			detals_company = detals_company.filter(donor_info__model=AutoModel.objects.get(value=request.POST['model']))		
-		if request.POST['generation'] != 'noselect':
-			detals_company = detals_company.filter(donor_info__generation=AutoGeneration.objects.get(value=request.POST['generation']))		
-		if request.POST['number'] != 'noselect':
+		if request.POST['detal'] != 'Все детали':
+			detals_company = detals_company.filter(title=request.POST['detal'])
+			print('Фильтрация по детали')
+		if request.POST['mark'] != 'Все марки':
+			print('Фильтрация по марке')
+			donor_mark = AutoDonor.objects.filter(mark=AutoMark.objects.get(title=request.POST['mark']))
+			detals_company = detals_company.filter(donor_info__in=donor_mark)
+		if request.POST['model'] != 'Все модели':
+			detals_company = detals_company.filter(donor_info__model=request.POST['model'])		
+			print('Фильтрация по модели')
+		if request.POST['generation'] != 'Все поколения':
+			detals_company = detals_company.filter(donor_info__generation=request.POST['generation'])		
+			print('Фильтрация по поколению')
+		if request.POST['number'] != '':
+			print('Фильтрация по номеру')
 			pass
 		if request.POST['stock'] != 'noselect':	
 			detals_company = detals_company.filter(stockroom=Stock.objects.get(pk=request.POST['stock']))	
+			print('Фильтрация по складу')
 		if request.POST['stock_param'] != 'noselect':
+			print('Фильтрация по складской ячейче')
 			pass	
 		return Paginator(detals_company, 25)
 
 	# Подгрузка страниц 
 	def load_ajax_page(self, request):
 		num_page = int(request.POST['active_page'])
-		company = Company.objects.filter(staff_users=request.user)
-		detals_company = UserDetal.objects.filter(company=company[0]).order_by('id')
-		query_result = Paginator(detals_company, 25)
-		data = {'new_detals': [{'id': elem.id,
-								'title': elem.title,
-								'price': elem.price,
-								'description': elem.description,
-								'stockroom': elem.stockroom.title,
-								'photo': elem.photo.photo.url,
-								'uploaded': elem.uploaded,
-								'donor': {'mark': elem.donor_info.mark.title,
-										  'model': elem.donor_info.model,
-										  'generation': elem.donor_info.generation}
-								} for elem in query_result.page(num_page).object_list ] }
+		query_result = self.filter_detals(request)
+		data = self.generation_dict_detals(request, query_result, num_page)
 		return data
 
 	# Подгрузка каталогов

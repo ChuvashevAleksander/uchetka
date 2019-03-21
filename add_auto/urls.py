@@ -3,5 +3,6 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('', AddDetalPage.as_view(), name='add_detal_page_url'),
+    path('donor/', AddInDonor.as_view(), name='add_in_donor_page_url'),
+    path('fast/', AddFast.as_view(), name='add_fast_page_url'),
 ]

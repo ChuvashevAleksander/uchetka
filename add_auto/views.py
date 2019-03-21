@@ -9,7 +9,7 @@ from lk.models import *
 from lk import models as modellls
 
 
-class AddDetalPage(View):
+class AddInDonor(View):
 	def get(self, request):
 		return self.render_template(request)
 
@@ -28,13 +28,19 @@ class AddDetalPage(View):
 		sections = {'sections': self.get_data(data)}
 		return sections
 
-
-
-
 	def render_template(self, request, data):
 		context = {'sections': data}
 		for elem in data:
 			print(data)
+		return render(request, 'add_auto/index.html', context=context)
+
+
+class AddFast(View):
+	def get(self, request):
+		return self.render_template(request)
+
+	def render_template(self, request, data):
+		context = {'sections': ''}
 		return render(request, 'add_auto/index.html', context=context)
 
 

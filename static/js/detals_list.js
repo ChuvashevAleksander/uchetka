@@ -3,6 +3,19 @@ $('.body-table').scroll(function(){
     var active = $('li.active')[0]
     var next_elem = $('li.active')[0].nextElementSibling
     var old_elem = $('li.active')[0].previousElementSibling
+
+    // переменые фильтров
+    var number = $('.small #id_number').val();
+    var detal = $('.small #id_detal :selected').text();
+    var mark = $('.small #all_marks :selected').text();
+    var model = $('.small #all_models :selected').text();
+    if (model == null) { var model = 'Все модели'; }
+    var gen = $('.small #all_generations :selected').text();
+    if (gen == null) { var gen = 'Все поколения'; }
+    var stock = $('.small #id_stock').val();
+    var stock_param = $('.small #id_stock_param').val();
+    var price_min = $('.small #id_price_min').val();
+    var price_max = $('.small #id_price_max').val();
     
     if (this.scrollTop==this.scrollHeight-this.clientHeight) {
         // loader('on');
@@ -13,6 +26,15 @@ $('.body-table').scroll(function(){
                 'csrfmiddlewaretoken': csrftoken,
                 'type': 'load_ajax_page',
                 'active_page': active_page,
+                'number': number,
+                'detal': detal,
+                'mark': mark,
+                'model': model,
+                'generation': gen,
+                'stock': stock,
+                'stock_param': stock_param,
+                'price_min': price_min,
+                'price_max': price_max
             },
             success: function (data) {
                 for (var i = 0; i <= data.new_detals.length-1; i++) {
@@ -31,8 +53,64 @@ $('.body-table').scroll(function(){
         });      
     }
 })
-// Отправка формы при изменении малого фильтра
 
+
+////////// Фильтрация ///////////
+// Select
+$(function() {
+    $('.small select').change(function() {
+        filter_detals()
+    });
+});
+// input
+$(function() {
+    $('.small input').change(function() {
+        filter_detals()
+    });
+});
+
+// POST запрос на фильтрацию
+function filter_detals() {
+    loader('on');
+    var number = $('.small #id_number').val();
+    var detal = $('.small #id_detal :selected').text();
+    var mark = $('.small #all_marks :selected').text();
+    var model = $('.small #all_models :selected').text();
+    if (model == null) { var model = 'Все модели'; }
+    var gen = $('.small #all_generations :selected').text();
+    if (gen == null) { var gen = 'Все поколения'; }
+    var stock = $('.small #id_stock').val();
+    var stock_param = $('.small #id_stock_param').val();
+    var price_min = $('.small #id_price_min').val();
+    var price_max = $('.small #id_price_max').val();
+    $.ajax({
+        url:'/lk/detals_list/', 
+        type:'POST', 
+        data: {
+            'type': 'filter_ajax',
+            'number': number,
+            'detal': detal,
+            'mark': mark,
+            'model': model,
+            'generation': gen,
+            'stock': stock,
+            'stock_param': stock_param,
+            'price_min': price_min,
+            'price_max': price_max
+        }, 
+        success: function(data) {
+            if (data.new_detals.length == 0) {
+                alert('Нет деталей по заданым фильтрам');
+            } else {
+                $("#table-list-detals").empty();
+                for (var i = 0; i <= data.new_detals.length-1; i++) {
+                    $("#table-list-detals").append("<tr data-content="+(data.new_detals[i].id)+" id='detal-in-list'><td class='global '><i class='fas fa-globe'></i></td><td class='checkbox'><input id='check-box-detal' type='checkbox'></td><td class='count-num'></td><td class='detal-number'>645GH2TD2</td><td class='detal-title'>"+data.new_detals[i].title+"</td><td class='detal-donor'>"+data.new_detals[i].donor.mark+" "+data.new_detals[i].donor.model+" "+data.new_detals[i].donor.generation+"</td><td class='detal-desc'>Описание</td><td class='detal-stock'>"+data.new_detals[i].stockroom+"</td><td class='detal-stock-param'>Ячейка</td><td class='detal-photo'><div class='mini-photo'><img src='/static/img/image_mini.png'></div></td><td class='detal-price'>"+data.new_detals[i].price+"₽</td></tr>");
+                };           
+            }
+            loader('off');
+        }
+    });
+}
 
 // Открыть панель выгрузки
 $("#upload-ads").click(function() {

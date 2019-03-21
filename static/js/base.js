@@ -124,6 +124,9 @@ $(function() {
 	});
 });
 
+
+
+
 function not_permissions() {
 	document.querySelector('.alert-message').innerHTML = 'Недостаточно прав!';
 	document.querySelector('.alert-window').classList.add('error');

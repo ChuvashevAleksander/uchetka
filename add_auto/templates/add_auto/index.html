@@ -52,95 +52,14 @@
 							<li>{{selected_auto}}<i class="fas fa-chevron-right"></i></li>
 						</ul>
 					</div>
+
 					<div class="content-add-panel">
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
-						<div class="card-detal-group">
-							<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
-							<div class="title-group">Заголовок</div>
-						</div>
+						{% for elem in sections.sections %}
+							<div class="card-detal-group">
+								<div class="img-group"><img src="{% static "img/kuzov.png" %}" alt=""></div>
+								<div class="title-group">{{elem.description}}</div>
+							</div>
+						{% endfor %}
 					</div>
 				</div>
 				<div class="donor in-add-page block-desing">

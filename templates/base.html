@@ -155,7 +155,7 @@
 			<div class="modal">
 				<div class="modalcontent" id="modalcontent">
 					<div class="selectAutoDonor">
-						<form action="/lk/add_auto/" method="POST">
+						<form action="{% url 'add_in_donor_page_url' %}" method="POST">
 							{% csrf_token %}
 							<input type="hidden" name="cat" value="getSections">
 							<div class="left-col">
@@ -201,7 +201,7 @@
 								</div>
 								<div class="button-block">
 									<button id="close" type="button" class="btn btn-danger">Отмена</button>	
-									<button {% if stockroom_count == 0 %} disabled {% endif %} id="nextpageadd" type="submit" class="btn btn-success" onclick="show_loader(this)">Продолжить</button>
+									<button {% if stockroom_count == 0 %} disabled {% endif %} id="nextpageadd" type="submit" class="btn btn-success" onclick="loader('on')">Продолжить</button>
 								</div>
 							</div>
 						</form>
